@@ -2,17 +2,26 @@ const BasePage = require('./base.page');
 
 class InventoryPage extends BasePage {
 
-    // Locator for the sort dropdown
     get dropDown() {
         return $("//select[@class='product_sort_container']");
     }
 
-    // Method to select "Price (low to high)"
     async sortByPriceLowToHigh() {
-        await this.dropDown.waitForDisplayed();           // wait until the dropdown is visible
+        await this.dropDown.waitForDisplayed();
         await this.dropDown.selectByVisibleText('Price (low to high)');
+    }
+
+    async getItemPrices() {
+        
+
+        const priceElements = Array.from(
+            await browser.$$("//div[@class='inventory_item_price']")
+        ); 
+
+        const texts = await Promise.all(priceElements.map(el => el.getText()));
+        return texts.map(text => parseFloat(text.replace('$', '')));
     }
 
 }
 
-module.exports = new InventoryPage();  // export instance for easy usage
+module.exports = new InventoryPage();
