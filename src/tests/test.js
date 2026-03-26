@@ -1,6 +1,8 @@
 const LoginPage = require('../pages/login.page');
 const InventoryPage = require('../pages/inventory.page');
 
+const items = ['sauce-labs-backpack', 'sauce-labs-bike-light'];
+
 describe('UC-1: Sorting Validation', () => {
 
     before(async () => {
@@ -9,20 +11,17 @@ describe('UC-1: Sorting Validation', () => {
     });
 
     it('should sort items low to high and verify prices', async () => {
-        // Sort items
         await InventoryPage.sortByPriceLowToHigh();
 
-        // Scrape prices
         const prices = await InventoryPage.getItemPrices();
         console.log('DEBUG: Scraped prices:', prices);
 
-        // Validate ascending order
         const sorted = [...prices].sort((a, b) => a - b);
         expect(prices).toEqual(sorted);
     });
 
     it('should add two items to the cart and verify cart updates to 2', async () => {
-        await InventoryPage.addTwoItemsToCart();
+        await InventoryPage.addItemsToCart(items);
 
         const count = await InventoryPage.getCartCount();
         console.log('DEBUG: Cart count:', count);
@@ -30,14 +29,13 @@ describe('UC-1: Sorting Validation', () => {
         expect(count).toBe('2');
     });
 
-      it('should remove one item and verify cart updates to 1', async () => {
-        await InventoryPage.removeOneItemFromCart();
+    it('should remove one item and verify cart updates to 1', async () => {
+        await InventoryPage.removeItemsFromCart([items[1]]);
 
         const count = await InventoryPage.getCartCount();
         console.log('DEBUG: Cart count after remove:', count);
 
         expect(count).toBe('1');
     });
-
 
 });

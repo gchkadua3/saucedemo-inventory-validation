@@ -1,25 +1,24 @@
 const BasePage = require('./base.page');
 
+const items = ['sauce-labs-backpack', 'sauce-labs-bike-light'];
+
 class InventoryPage extends BasePage {
 
     get dropDown() {
         return $("//select[@class='product_sort_container']");
     }
 
-    get addBackpack() {
-        return $("//button[@id='add-to-cart-sauce-labs-backpack']");
-    }
-
-    get addBikeLight() {
-        return $("//button[@id='add-to-cart-sauce-labs-bike-light']");
-    }
-
-    get removeBike(){
-        return $("//button[@id='remove-sauce-labs-bike-light']");
-    }
-
     get cartBadge() {
         return $("//span[@class='shopping_cart_badge']");
+    }
+
+    // 🔹 Dynamic selectors
+    getAddButton(item) {
+        return $(`//button[@data-test='add-to-cart-${item}']`);
+    }
+
+    getRemoveButton(item) {
+        return $(`//button[@data-test='remove-${item}']`);
     }
 
     async sortByPriceLowToHigh() {
@@ -28,34 +27,35 @@ class InventoryPage extends BasePage {
     }
 
     async getItemPrices() {
+    const priceElements = Array.from(
+        await browser.$$("//div[@class='inventory_item_price']")
+    );
+    const texts = await Promise.all(priceElements.map(el => el.getText()));
+    return texts.map(text => parseFloat(text.replace('$', '')));
+}
 
-        const priceElements = Array.from(
-            await browser.$$("//div[@class='inventory_item_price']")
-        ); 
-
-        const texts = await Promise.all(priceElements.map(el => el.getText()));
-        return texts.map(text => parseFloat(text.replace('$', '')));
+    // 🔹 Parametrized add
+    async addItemsToCart(items) {
+        for (const item of items) {
+            const button = await this.getAddButton(item);
+            await button.waitForDisplayed();
+            await button.click();
+        }
     }
 
-    async addTwoItemsToCart() {
-        await this.addBackpack.waitForDisplayed();
-        await this.addBackpack.click();
-        await this.addBikeLight.waitForDisplayed();
-        await this.addBikeLight.click();
-    }
-
-     async removeOneItemFromCart() {
-        await this.removeBike.waitForDisplayed();
-        await this.removeBike.click();
+    // 🔹 Parametrized remove
+    async removeItemsFromCart(items) {
+        for (const item of items) {
+            const button = await this.getRemoveButton(item);
+            await button.waitForDisplayed();
+            await button.click();
+        }
     }
 
     async getCartCount() {
         await this.cartBadge.waitForDisplayed({ timeout: 3000 });
         return await this.cartBadge.getText();
     }
-
-    
- 
 
 }
 
