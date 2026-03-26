@@ -12,7 +12,7 @@ class InventoryPage extends BasePage {
         return $("//span[@class='shopping_cart_badge']");
     }
 
-    // 🔹 Dynamic selectors
+    
     getAddButton(item) {
         return $(`//button[@data-test='add-to-cart-${item}']`);
     }
@@ -34,7 +34,7 @@ class InventoryPage extends BasePage {
     return texts.map(text => parseFloat(text.replace('$', '')));
 }
 
-    // 🔹 Parametrized add
+    
     async addItemsToCart(items) {
         for (const item of items) {
             const button = await this.getAddButton(item);
@@ -43,7 +43,7 @@ class InventoryPage extends BasePage {
         }
     }
 
-    // 🔹 Parametrized remove
+    
     async removeItemsFromCart(items) {
         for (const item of items) {
             const button = await this.getRemoveButton(item);

@@ -6,8 +6,6 @@ class LoginPage extends BasePage {
         return super.open('https://www.saucedemo.com');
     }    
 
-
-
     get userNameInput(){
         return $("//input[@id='user-name']");
     }
@@ -20,7 +18,6 @@ class LoginPage extends BasePage {
         return $("//input[@id='login-button']");
     }
     
-
     async login(username,password){
         await this.userNameInput.setValue(username);
         await this.passwordInput.setValue(password);
