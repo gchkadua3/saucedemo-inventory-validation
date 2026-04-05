@@ -3,7 +3,7 @@ const BasePage = require('./base.page');
 class LoginPage extends BasePage {
 
     open() {
-        return super.open('https://www.saucedemo.com');
+        return super.open('/');
     }    
 
     get userNameInput(){

@@ -1,7 +1,5 @@
 const BasePage = require('./base.page');
 
-const items = ['sauce-labs-backpack', 'sauce-labs-bike-light'];
-
 class InventoryPage extends BasePage {
 
     get dropDown() {
@@ -53,7 +51,7 @@ class InventoryPage extends BasePage {
     }
 
     async getCartCount() {
-        await this.cartBadge.waitForDisplayed({ timeout: 3000 });
+        await this.cartBadge.waitForDisplayed();
         return await this.cartBadge.getText();
     }
 
